@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel='stylesheet' type='text/css' href='css/options.css'>
+        <title>KanoFormer :: Настройки</title>
+        <script src="js/jquery/jquery203.js"></script>
+        <script type="text/javascript" src="js/tech/extend.js"></script>
+        <script src="js/tech/common_func.js"></script>
+        <script src="js/options/options_fe.js"></script>
+        
+    </head>
+    <body>
+        <div id="container">
+            <div id="header">
+                Настройки
+            </div>
+            <div id="contentArea">
+                <table id="content" cellspacing="0">
+                    <tr><td class="optContent">
+                            <label for="soundOn">Звук оповещений</label>
+                        </td>
+                        <td class="optVariant">
+                            <input  id="soundOn" class="chB" type="checkbox"/>
+                        </td>
+                    </tr>
+                    <tr><td class="optContent" title="Активируйте, чтобы включить визуальное оповещение">
+                            <label for="visualAlertOn">Визуальное оповещение о новых событиях. <b style="color: red">Только для Google Chrome</b></label>
+                        </td>
+                        <td class="optVariant">
+                            <input  id="visualAlertOn" class="chB" type="checkbox"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="optContent" title="Если эта опция включена, то после сетевых ошибок расширение будет автоматически перезагружаться. Что влечет за собой перезагрузку открытых вкладок с КАНОБУ.РУ" >
+                            <label for="autoReloadOn">Автоматическая перезагрузка расширения после сетевых сбоев</label>
+                        </td>
+                        <td class="optVariant">
+                            <input id="autoReloadOn" class="chB" type="checkbox"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="optContent" title="Если эта опция включена, то при переходе по любой ссылке внутри расширения будет производиться поиск уже открытой вкладки с официальным сайтом, если таковая (в случае нескольких используется первая найденная) найдется, новая открываться не будет, а ссылка будет открыта в этой найденной вкладке" >
+                            <label for="smartNav">"Умный" переход по ссылкам ВНУТРИ РАСШИРЕНИЯ</label>
+                        </td>
+                        <td class="optVariant">
+                            <input id="smartNav" class="chB" type="checkbox"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
