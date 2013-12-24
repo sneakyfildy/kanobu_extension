@@ -1,0 +1,234 @@
+html{
+    width: 465px !important;
+    height: 456px !important;
+}
+body{
+    margin: 0px;
+    font-family: "PT Sans",helvetica,"segoe UI",arial,sans-serif;
+    background: #999 !important;
+}
+#container{
+}
+#scroller.kf{
+    overflow-y: auto !important;
+    height: 350px;
+    position: relative;
+}
+
+#scroller ul{
+    padding: 0px 20px 5px 15px !important;
+    margin: 0px;
+}
+
+a, li.notifyContent, .kf-button{
+    -webkit-transition:all .2s ease-in-out;
+}
+
+.menuList a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.notify-tabs.kf {
+    margin: 0;
+}
+
+.ui-tablist--item.kf {
+    width: 155px;
+    border-radius: 0px !important;
+}
+
+.notifyContainer.kf {
+    width: 465px;
+    min-height: 377px;
+    background: #000;
+}
+
+
+
+.messagesBottomLine {
+    background-color: transparent !important;
+}
+
+.notifyContainer .loadingIco.kf {
+    background: url("/img/notify_loader.png") no-repeat;
+    z-index: 10;
+}
+
+.inviteControls{
+    display: none !important;
+}
+
+#kf-buttons, #profile{
+    overflow: hidden;
+    background: #000;
+    position: relative;
+    margin: 1px 0px;
+}
+
+.kf-button {
+    float: left;
+    border: 1px solid #999;
+    margin: -1px -1px -1px 0px;
+}
+.kf-button.right {
+    float: right;    
+}
+
+.kf-button a{
+    color: #fff;
+    cursor: pointer;
+    color: #fff;
+    height: 38px;
+    padding: 0px 10px;
+    text-align: center;
+    line-height: 40px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.kf-button a.main-page{
+    padding: 0px 10px 0px 29px;
+}
+.kf-button img{
+    display: inline-block;
+}
+.kf-button a.main-page img{
+    display: inline-block;
+    position: absolute;
+    top: 9px;
+    left: 5px;
+}
+.kf-button a.profile img{
+    top: 6px;
+}
+.kf-button a:hover{
+    background-color: #fff;
+    color: #000;
+}
+
+.kf-button img.normal{
+    display: none;
+}
+.kf-button img.white-mask{
+    display: inline-block;
+}
+.kf-button:hover img.normal{
+    display: inline-block;
+}
+.kf-button:hover img.white-mask{
+    display: none;
+}
+
+.kf-button.options a, .kf-button.tool a{
+    width: 38px;
+    height : 38px;
+    padding: 0px;
+    background-size: 50% 50%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+}
+.kf-button.sound a{
+    background-image: url('/img/speaker32_w.png');
+}
+.kf-button.sound:hover a{
+    background-image: url('/img/speaker32.png');
+}
+
+.kf-button.visual a{
+    background-image: url('/img/monitor32_w.png');
+}
+.kf-button.visual:hover a{
+    background-image: url('/img/monitor32.png');
+}
+
+.kf-button.reload a{
+    background-image: url('/img/exchange32_w.png');
+}
+.kf-button.reload:hover a{
+    background-image: url('/img/exchange32.png');
+}
+
+.kf-button.sound a.disabled{
+    background-image: url('/img/speakermute32_w.png');
+}
+.kf-button.sound:hover a.disabled{
+    background-image: url('/img/speakermute32.png');
+}
+
+.kf-button.visual a.disabled{
+    background-image: url('/img/monitor32_off_w.png');
+}
+.kf-button.visual:hover a.disabled{
+    background-image: url('/img/monitor32_off.png');
+}
+
+/*
+.num {
+    text-shadow:-1px -1px 1px #000;
+    font-size:25px;
+}
+
+#mess,#inv,#comm,#act {
+    -webkit-transition:all .2s ease-in-out;
+    text-align:center;
+    border:1px solid #949494;
+    background-image:url(../cat_active.png);
+    padding:2px;
+}
+
+a:hover {
+    color:#ffd200;
+}
+#container{
+    position: relative;
+    top: -10px;
+    left: -10px;
+    font-size: 15px;
+    padding: 10px;
+    height:95px;
+    border: 1px solid black;
+}
+#cats{
+    position: relative;
+    min-height: 92px;
+}
+#mess:hover,#inv:hover,#comm:hover,#act:hover {
+    background-image:url(../cat_active_bright.png);
+}
+#mess, #inv, #comm, #act{
+    float: left;
+    width:75px;
+    height:40px;
+}
+
+.footer{
+    position: relative;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 20px;
+    background-image:url(../button.png);
+    -webkit-transition:all .2s ease-in-out;
+    line-height: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: #FFFFFF;
+}
+.footer:hover{
+    background-image:url(../cat_active_bright.png);
+}
+
+#logo{
+    width: 40px;
+    height: 40px;
+    background-image:url(../img/nav_kanobu.png);
+    background-size: 40px 40px;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    margin: 0 auto;
+}
+.lil_logo{
+    vertical-align: middle;
+}*/

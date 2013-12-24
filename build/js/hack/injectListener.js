@@ -1,0 +1,2 @@
+/*! Kanobu_chrome 24-12-2013 */
+function inject(a){var b=document.createElement("script");b.setAttribute("type","application/javascript"),b.textContent="("+a+")();",document.body&&(document.body.appendChild(b),document.body.removeChild(b))}window.kanoformerListenersInserted||(window.kanoformerListenersInserted=!0,inject(function(){$(".notifyItem.dropDownItem.headerIcon").on("open.dropdown",function(){$("#kf-transevent").trigger("click")})}));
