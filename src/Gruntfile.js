@@ -16,10 +16,10 @@
             eqnull: true,
             camelcase: true,
             quotmark: true,
-            
+
             // lax
             laxcomma: true,
-                    
+
             // environment
             browser: true,
             devel: true,
@@ -60,6 +60,22 @@
                 ,'setItem'
         ];
 
+    var replacementsArr = [];
+    var pkg = grunt.file.readJSON('package.json');
+    // manual replacing rules, to make js files be like they served to ngpas team
+    // on ngpas side replacement is done by inventory server
+    var replacementsObj = {
+        '__EXTENSION_VERSION__': pkg.version || 'n/a'
+    };
+
+    // transform plain object into grunt-text-replace config object
+    for (var macro in replacementsObj) {
+        replacementsArr.push({
+            from: macro,
+            to: replacementsObj[macro]
+        });
+    }
+
         for (i = 0; i < projectGlobals.length; i++) {
             jshintGlobals[ projectGlobals[i] ] = true;
         }
@@ -69,7 +85,7 @@
         }
 
         defaultOptions.globals = jshintGlobals;
-        
+
         var jsHintFiles = ['Gruntfile.js', 'js/*.js', 'js/**/*.js']
             ,uglifyFilesConfig = {}
             // files to concat <where : [what files]>
@@ -106,22 +122,22 @@
                 ,'<%= pkg.buildPath %>js/vendor.js': [
                   'js/kanobu_vendor/2.js'
                   ,'js/kanobu_vendor/auth.js'
-                  ,'js/kanobu_vendor/sse.js'                        
+                  ,'js/kanobu_vendor/sse.js'
                   ,'js/kanobu_vendor/window_controller.js'
-                  ,'js/kanobu_vendor/eventsource.js'                        
+                  ,'js/kanobu_vendor/eventsource.js'
                   ,'js/kanobu_vendor/1.js'
-                ].reverse()                
+                ].reverse()
             };
-			
+
         // uglify all minifed stuff
         for (var concatPath in concatFilesConfig){
             uglifyFilesConfig[concatPath] = [concatPath];
         }
-		
+
          // now add not uglify files
         //concatFilesConfig['<%= pkg.buildPath %>manifest.json'] = ['manifest.' + build + '.json'];
 
-        
+
         grunt.initConfig({
             pkg		: grunt.file.readJSON('package.json')
             ,jshint	: {
@@ -130,7 +146,7 @@
             }
             ,watch	: {
                 files		: jsHintFiles,
-                tasks		: 'jshint'
+                tasks		: ['replace', 'jshint']
             }
             ,concat	: {
                 options		: {
@@ -147,15 +163,38 @@
                 dist		: {
                   files			: uglifyFilesConfig
                 }
-              }
+              },
+                replace: {
+                  devChrome: {
+                      src: ['manifest.replace.json'], // source files array
+                      dest: 'manifest.json', // destination directory or file
+                      replacements: replacementsArr
+                  },
+                  devOpera: {
+                      src: ['manifest.opera.replace.json'], // source files array
+                      dest: 'manifest.opera.json', // destination directory or file
+                      replacements: replacementsArr
+                  },
+                  prodChrome: {
+                      src: ['manifest.replace.json'], // source files array
+                      dest: '<%= pkg.buildPath %>/manifest.json', // destination directory or file
+                      replacements: replacementsArr
+                  },
+                  prodOpera: {
+                      src: ['manifest.opera.replace.json'], // source files array
+                      dest: '<%= pkg.buildPath %>/manifest.opera.json', // destination directory or file
+                      replacements: replacementsArr
+                  }
+                }
         });
-        
+
         grunt.loadNpmTasks('grunt-contrib-jshint');
         grunt.loadNpmTasks('grunt-contrib-concat');
         grunt.loadNpmTasks('grunt-contrib-uglify');
         grunt.loadNpmTasks('grunt-contrib-watch');
-		
+        grunt.loadNpmTasks('grunt-text-replace');
+
 		// no watch for default task atm
-        grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+        grunt.registerTask('default', ['jshint', 'replace', 'concat', 'uglify']);
     };
 }());
