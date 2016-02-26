@@ -184,6 +184,11 @@
                       src: ['manifest.opera.replace.json'], // source files array
                       dest: '<%= pkg.buildPath %>/manifest.opera.json', // destination directory or file
                       replacements: replacementsArr
+                  },
+                  readme: {
+                      src: ['README.replace.md'], // source files array
+                      dest: '../README.md', // destination directory or file
+                      replacements: replacementsArr
                   }
                 }
         });

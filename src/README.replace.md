@@ -1,4 +1,4 @@
-Kanobu Extension. A.k.a. "kanoFormer" 2.0.6
+Kanobu Extension. A.k.a. "kanoFormer" __EXTENSION_VERSION__
 ================
 
 Published for reviewing purpose.
