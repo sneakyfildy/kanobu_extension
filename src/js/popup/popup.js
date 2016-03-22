@@ -1,9 +1,8 @@
-var URL_PREFIX               = 'http://kanobu.ru'
-    ,MIN_HEIGHT_TILL_LOAD   = 250;
+var URL_PREFIX = 'http://kanobu.ru';
+var MIN_HEIGHT_TILL_LOAD = 250;
 
 $(document).ready(function(){
     Popup = new Popup();
-    Popup.init();
 });
 
 function Popup(){
@@ -11,7 +10,7 @@ function Popup(){
 
     this.init = function(){
         if (this.inited){
-            return;            
+            return;
         }
         this.renderProfile();
         this.$scroller = $('#scroller');
@@ -25,8 +24,9 @@ function Popup(){
 
 
         this.inited = true;
+        return this;
     };
-    
+
     this.renderProfile = function(){
         var bg = CommonFn.getBg()
             ,Auth = bg.Auth;
@@ -40,39 +40,39 @@ function Popup(){
         $profileButton.find('img').attr('src', Auth.user.avatar);
         $profileButton.attr('href', URL_PREFIX + Auth.user.url);
         $profileButton.html($profileButton.html() + Auth.user.name);
-        
+
         me.setOptionsButtons();
     };
-    
+
     this.setOptionsButtons = function(){
-        // TODO refactor        
+        // TODO refactor
         var options = CommonFn.getBg().Extension.Sub.options
             ,$optionsItem;
-        
+
         for ( var optionId in options ){
             $optionsItem = $( '[data-option={0}]'.format(optionId) );
             if ( $optionsItem.get(0) ){
                 $optionsItem[ options[optionId] ? 'removeClass' : 'addClass' ]('disabled');
             }
         }
-        
+
         $('.kf-button.options a').each(function(){
             var $a = $(this)
                 ,titleState = $a.hasClass('disabled') ? '-disabled' : '';
             $a.attr( 'title', $a.attr('data-title' + titleState) );
         });
-        
+
         // @todo remove when unused
         if ( !chrome.notifications ){
             $('.kf-button.visual').hide();
         }
     };
-    
+
     this.onScroll = function(){
         var $this       = me.$scroller
             ,$bottom    = $('.messagesBottomLine')
             ,willLoad;
-        
+
         if ( $this.get(0).scrollHeight - $this.get(0).scrollTop - $this.height() < MIN_HEIGHT_TILL_LOAD ){
             willLoad = !me.loading && loadContent();
         }
@@ -91,33 +91,33 @@ function Popup(){
         $(document).on('click', 'a', me.onLinkClick);
         $(document).on('click', '.ui-tablist--item', me.onTabClick);
     }
-    
+
     function initScrollListener(){
-        me.$scroller.scroll( null, me.onScroll );        
+        me.$scroller.scroll( null, me.onScroll );
     }
-    
+
     //this - clicked el
     this.onOptionsClick = function(e){
         e.preventDefault();
         e.stopPropagation();
-        
+
         var $optionsEl = $(this);
-        
+
         $optionsEl.toggleClass('disabled');
-        
+
         var optionId = $optionsEl.attr('data-option')
             ,optionValue = !$optionsEl.hasClass('disabled');
-            
+
         CommonFn.getBg().Options.setOneOption(optionId, optionValue);
-        
-        me.setOptionsButtons();       
+
+        me.setOptionsButtons();
     };
-    
+
     //this - clicked el
     this.onToolClick = function(e){
         e.preventDefault();
         e.stopPropagation();
- 
+
         me.doToolAction( $(this).attr('data-action') );
     };
     this.doToolAction = function(action){
@@ -126,7 +126,7 @@ function Popup(){
                 CommonFn.getBg().Extension.reload(true);
             }
         };
-        
+
         if (actions[action]){
             actions[action].call();
         }
@@ -143,7 +143,7 @@ function Popup(){
     function setSelectedTab(){
         me.URL = URL_PREFIX + $('.it-is-selected').attr('data-url');
     }
-    
+
     this.onLinkClick = function(e){
         if ( $(this).hasClass('internal-link') || $(this).hasClass('no-href') ){
             return;
@@ -160,10 +160,10 @@ function Popup(){
         CommonFn.goToLink(href);
 
     };
-    
+
     this.onGetNotif = function(data, res){
         me.setStopLoading();
-        
+
         var $appendEl = me.getInsertEl()
             ,appendData = res;
         if ( typeof res === 'string' && res.indexOf('<input id="id_password"') >= 0 ){
@@ -185,8 +185,8 @@ function Popup(){
             appendData = res.list;
             me.setNextPage(res.nextpage);
         }
-        
-        $appendEl.append(appendData);        
+
+        $appendEl.append(appendData);
         this.afterAppend(appendData);
     };
 
@@ -215,7 +215,7 @@ function Popup(){
         this.onGetNotif( {full:1}, 'Error getting data from kanobu' );
         console.log('Error getting notif data from kanobu');
     };
-    
+
 
     function loadContent(data){
         me.setStartLoading();
@@ -254,4 +254,6 @@ function Popup(){
         me.$loadingIcon.hide();
         me.loading = false;
     };
+
+    return this.init();
 }

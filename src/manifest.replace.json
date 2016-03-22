@@ -22,6 +22,7 @@
         "tabs",
         "cookies",
         "http://kanobu.ru/",
+        "http://auth.kanobu.ru/",
         "http://kanobu.ru/*",
         "http://www.kanobu.ru/*",
         "http://bloknotus.com/*",

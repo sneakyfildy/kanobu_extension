@@ -4,7 +4,7 @@
 function Extension(){
     var me = this;
     me.msgToShow = [];
-    
+
     me.init             =  function(){
 	// rewrite backfound.html with new content from parent site (kanobu.ru)
         me.rewriteBackground();
@@ -12,7 +12,7 @@ function Extension(){
         me.initListeners();
         me.checkVersion();
         window.setTimeout(me.startUpdate, 0);
-        
+
         if ( !!getItem('reloadOnStartup') ){
             setItem('reloadOnStartup', '');
             CommonFn.eachKanobuTab(
@@ -40,7 +40,7 @@ function Extension(){
     me.scheduleRequest  = function(){
         window.setTimeout(me.startUpdate, 1000 * me.Sub.appData.mainInt);
     };
-    
+
     me.appData  = {
         debug   : false //true
     };
@@ -64,7 +64,7 @@ function Extension(){
             id = id || 'inboxSound';
             if (document.getElementById(id) ){
                 document.getElementById(id).play();
-            }            
+            }
         },
         /**
          * alert error to console with possible custom text
@@ -107,7 +107,7 @@ function Extension(){
         }
         ,setBadgeTitle       : function( text, noStore ){
             text = (text + '') || '';
-            
+
             if ( CommonFn.isChrome() ){
                 chrome.browserAction.setTitle({
                     title : text
@@ -225,13 +225,13 @@ function Extension(){
         var lastVersion = getItem('last_version', true)
             ,curVersion = me.Sub.version
             ,changed    = false;
-        
+
         if (lastVersion){
             var lMajor  = parseInt(lastVersion.major, 10)
                 ,lMinor = parseInt(lastVersion.minor, 10)
                 ,cMajor = parseInt(curVersion.major, 10)
                 ,cMinor = parseInt(curVersion.minor, 10);
-                
+
             if ( lMajor < cMajor || ( lMajor === cMajor && lMinor < cMinor ) ){
                 changed = true;
                 lastVersion = curVersion;
@@ -241,7 +241,7 @@ function Extension(){
             changed = true;
             lastVersion = curVersion;
         }
-        
+
         setItem('last_version', lastVersion, true);
         return changed;
     };
@@ -275,28 +275,30 @@ function Extension(){
                         me.Tech.playInboxSound(request.soundId);
                         break;
                 }
-                
+
             });
     };
-    
+
     // shortcut
     this.sbt = this.Tech.setBadgeTitle;
     this.sb = this.Tech.setBadge;
-    
+
     this.reload = function(forced){
         if ( me.Sub.options.autoReloadOn || forced ){
             setItem('reloadOnStartup', 'on');
             chrome.runtime.reload();
         }
     };
-    
-    
+
+
     this.rewriteBackground = function(){
 	// the main goal is to set background page with server-side event stuff as on parent site (kanobu.ru)
         function rewritePage(h){
             // clear text, we need only html blocks
-            h = h.replace(/[\u0430-\u044F\u0410-\u042F]|^\s+\s$/gim, '');
+            //h = h.replace(/[\u0430-\u044F\u0410-\u042F]|^\s+\s$/gim, '');
+            h = h.replace(/^<.DOCT[\sa-zA-Z0-9]+>/im, '');
             h = h.replace(/^\s\s\s\s/gim, '\t');
+
 
             //css
             h = h.replace(/<link.+>|<title>\s+.+<\/title>/gim, '');
@@ -304,23 +306,28 @@ function Extension(){
             //meta
             h = h.replace(/<meta.+>/gim, '');
 
+
+            var auth = h.match(/<script>(.|\n)+var auth(.|\n)+ <\/script>/im, '')[0];
+            //h = h.replace(/\n/gim, '');
             h = h.replace(/<script.+>/gim, '');
 
             // cut
             // we need to cut only <header> block, connot turn to jQuery, cause we don't want to execute it yet
-            var cutStart = h.indexOf('<div class="container">')
-                ,h1 = h.substring(0, cutStart)
-                ,head
-                ,body;
+//            var cutStart = h.indexOf('<div class="b-topbar__obj">')
+//                ,h1 = h.substring(0, cutStart)
+//                ,head
+//                ,body;
+            var head, body;
+           // h = h1 + '</div></body></html>';
 
-            h = h1 + '</div></body></html>';
+            //head = h.substring(h.indexOf('<head>') + 6, h.indexOf('</head>'));
 
-            head = h.substring(h.indexOf('<head>') + 6, h.indexOf('</head>')); 
-
+            head = '';
             // add parent site required scripts if in dev mode
             if (window.devmode === 1){
                 //head = '<script type="text/javascript" src="js/kanobu_vendor/apimin.js"></script>' + head;
                 head = '<script type="text/javascript" src="js/kanobu_vendor/auth.js"></script>' + head;
+                head = '<script type="text/javascript" src="js/kanobu_vendor/knbauth.js"></script>' + head;
                 head = '<script type="text/javascript" src="js/kanobu_vendor/sse.js"></script>' + head;
                 head = '<script type="text/javascript" src="js/kanobu_vendor/window_controller.js"></script>' + head;
                 head = '<script type="text/javascript" src="js/kanobu_vendor/eventsource.js"></script>' + head;
@@ -328,20 +335,22 @@ function Extension(){
                 // ... and minifed if not
                 head = '<script type="text/javascript" src="js/vendor.js"></script>' + head;
             }
-            
-            body = h.substring(h.lastIndexOf('<body>') + 6, h.indexOf('</body>'));
 
-            body += '<audio id="inboxSound" src="success.wav" controls preload="auto" autobuffer></audio>';    
-            body += '<div id="' + SSE_CONNECTOR_ID + '"></div>';
-			
+            body = h.match(/<body(.|\r|\S|\n)+<\/body>/gim)[0];
+            body = body.replace(/<body [^>]+>|<\/body>/gim,'');
+            body += auth;
+            //body = body.match(/<header(.|\n)+<\/header>/gim)[0];
+            //body += '<audio id="inboxSound" src="success.wav" controls preload="auto" autobuffer></audio>';
+            //body += '<div id="' + SSE_CONNECTOR_ID + '"></div>';
+
             // after this HTML is rendered we can launch our extension
             body += '<script type="text/javascript" src="js/hack/afterinsert.js"></script>';
-            
+
             return {h: head, b: body};
         }
 
         $.ajax({
-            url         : 'http://kanobu.ru/help/'
+            url         : 'http://kanobu.ru/contact'
             ,cache      : false
             ,success    : function (resp) {
                 resp = rewritePage(resp);

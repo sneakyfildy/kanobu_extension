@@ -22,13 +22,13 @@ function SubExtension( base ){
         serverOptionsInt        : 3600 // 1 hour
         ,serverOptionsUrl        : 'http://www.bloknotus.com/extension/kanobu/options/'
     };
-    
+
     //@@version
     me.version = {
         major   : 2,
         minor   : 0
     };
-    
+
     me.globals = {
         defaultBadgeTitle  : _txt('Kanobu')
     };
@@ -45,7 +45,7 @@ function SubExtension( base ){
         ,doNotify    : function( msg ){
            msg.html = msg.html.replace('&laquo;', '"').replace('&raquo;', '"').replace('&nbsp;', ' ');
            msg.header = msg.header.replace('&laquo;', '"').replace('&raquo;', '"').replace('&nbsp;', ' ');
-           
+
             var opt = {
                 type    : 'basic',
                 title   : msg.header,
@@ -58,7 +58,7 @@ function SubExtension( base ){
                     }
                 ] : null
             };
-            
+
             if (chrome.notifications){
                 chrome.notifications.create('', opt, function(id){
                     me.notifShown = me.notifShown || {};
@@ -72,7 +72,7 @@ function SubExtension( base ){
      * Set of function to call by setTimeout
      */
     me.initTickers = function(){
-        me.Tickers = {            
+        me.Tickers = {
             serverOptionsTicker: new SubTicker({
                 fn          : base.Ticker.ajaxTickByTime,
                 params      : [me.appData.serverOptionsUrl, null, base.storeServerOptions, 'server_options_ts', me.appData.serverOptionsInt],
@@ -93,9 +93,9 @@ function SubExtension( base ){
                         me.clearNotif();
                         break;
                 }
-                
+
             });
-        
+
         if (chrome.notifications){
             chrome.notifications.onButtonClicked.addListener(function(id){
                 var url = me.notifShown[id];
@@ -119,23 +119,23 @@ function SubExtension( base ){
             ,link               = $notifData.find('a.notifyLink').attr('href')
             ,titlePreviewText   = me.getPreviewText($notifData, type)
             ,notifTitle         = me.getNotifTitle(type);
-        
-        link = link ? (URL_PREFIX + link) : false;      
+
+        link = link ? (URL_PREFIX + link) : false;
         me.unread++;
 
         if ( me.unread ){
             titlePreviewText +=  '\n' + _txt('Unread') + ': ' + me.unread;
         }
-        
+
         me.base.sbt( titlePreviewText + '\n' + prevTitle );
         me.base.sb(me.unread, this.colors.unread);
         me.checkUnreadOnLoadAfterSetBadge(me.unread);
-        
+
         // @todo refactor options applying
         if (me.options.soundOn){
             me.base.Tech.playInboxSound();
         }
-        
+
         if (me.options.visualAlertOn){
             me.Notifier.def.notify({
                 text    : titlePreviewText
@@ -144,7 +144,7 @@ function SubExtension( base ){
             });
         }
     };
-    
+
     this.clearNotif = function(){
         me.unread = 0;
         me.hasUnreadOnLoad = false;
@@ -153,15 +153,15 @@ function SubExtension( base ){
         me.clearChromNotifications();
         me.clearContentPages();
     };
-    
+
     this.decreaseUnread = function(amount){
         amount = amount || 1;
-        
+
         if (me.unread > 0){
             me.unread -= amount;
             me.base.sb(me.unread, false);
         }
-        
+
         me.checkUnreadOnLoadAfterSetBadge();
         return me.unread;
     };
@@ -178,7 +178,7 @@ function SubExtension( base ){
         // listens for connection status change (not messages)
         $('#' + SSE_CONNECTOR_ID).on('sseconnect', {scope: this}, this.onSseConnectionChange);
     };
-    
+
     this.onSseConnectionChange = function(e, status){
         me.lastStatus = status;
         me.setBadgeTitleByStatus(status);
@@ -217,7 +217,7 @@ function SubExtension( base ){
         }
         text = _txt('Status') + ': ' + text;
         this.base.sbt( text );
-        
+
         if (fn){
             fn.call(this);
         }
@@ -238,7 +238,7 @@ function SubExtension( base ){
             me.base.sbt(
                 me.base.lastBadgeTitle +
                     '\n' +
-                    '"{0}"='.format(count ? '+' : '?' ) + 
+                    '"{0}"='.format(count ? '+' : '?' ) +
                     _txt('Got not counted unread messages!')
                 ,true
             );
@@ -261,7 +261,7 @@ function SubExtension( base ){
         triggerWhatWeNeed();
     };
 
-    this.setVars        = function(){                
+    this.setVars        = function(){
     };
 
     /**
@@ -269,7 +269,7 @@ function SubExtension( base ){
      */
     this.beautifyPage = function(){
         $('.notifyItem.dropDownItem.headerIcon').appendTo('body');
-        $('header').remove();
+        //$('header').remove();
     };
 
     this.setSseListeners    = function(){
@@ -303,7 +303,7 @@ function SubExtension( base ){
     this.setError       = function(){
         this.base.sb('err', this.colors.error);
     };
-    
+
     this.SSEtext        = {
         'start'     : {
             text        : _txt('Connecting to Kanobu server... \nWait or reload the extension.')
@@ -318,14 +318,14 @@ function SubExtension( base ){
             ,fn         : this.setError
         }
     };
-    
+
     this.setReadyForMessage = function(flag){
         this.ready = !!flag;
     };
-    
+
     this.getPreviewText     = function($notifData, type){
         var text;
-        
+
         switch (type){
             case 'invite'   :
                 $notifData.find('.inviteControls').remove();
@@ -334,31 +334,31 @@ function SubExtension( base ){
             default         :
                 text = $notifData.text();
         }
-        
+
         return text.replace(/\s\s+/gim,' ');
     };
-    
+
     this.getNotifTitle      = function(type){
         var titles = {
             'im_message'    : _txt('Message')
             ,'notif'        : _txt('Notification')
             ,'invite'       : _txt('Invite')
         };
-        
+
         return titles[type] || null;
     };
 
     this.clearContentPages      = function(){
         CommonFn.eachKanobuTab(me.clearContentPageNotif);
     };
-    
+
     this.clearContentPageNotif =  function(tab){
         chrome.tabs.sendMessage(tab.id, {method: 'notif-clear'}, $.noop);
     };
-    
+
     this.clearChromNotifications = function(){
         me.notifShown = {};
-        
+
         function removeNotif(notifsObj){
             for ( var id in notifsObj ){
                 chrome.notifications.clear(id, $.noop);
